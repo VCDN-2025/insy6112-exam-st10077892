@@ -1,0 +1,86 @@
+USE exam2025;
+
+-- Q.3.1: Create the Student table
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    StudentSurname VARCHAR(50),
+    StudentNumber VARCHAR(20)
+);
+
+-- Q.3.2: Create the Lecturer table
+CREATE TABLE Lecturer (
+    LecturerID INT PRIMARY KEY,
+    LecturerName VARCHAR(50),
+    LecturerSurname VARCHAR(50)
+);
+
+-- Q.3.3: Create the Tutorial table
+CREATE TABLE Tutorial (
+    TutorialID INT PRIMARY KEY,
+    StudentID INT,
+    LecturerID INT,
+    TutorialDate DATE,
+    TutorialTime TIME,
+    TutorialDuration INT, -- Duration in minutes, for example
+
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (LecturerID) REFERENCES Lecturer(LecturerID)
+);
+
+-- Q.3.4: Insert data into the Student table
+INSERT INTO Student (StudentID, StudentName, StudentSurname, StudentNumber) VALUES
+(1, 'Debbie', 'Theart', '123456'),
+(2, 'Thomas', 'Molefe', '234567'),
+(3, 'Kate', 'Williams', '345678'),
+(4, 'Nhlanhla', 'Ngcobo', '456789');
+
+INSERT INTO Lecturer (LecturerID, LecturerName, LecturerSurname) VALUES
+(1, 'Zintle', 'Nukani'),
+(2, 'Ravi', 'Maharaj');
+
+INSERT INTO Tutorial (TutorialID, TutorialDate, TutorialTime, TutorialDuration, LecturerID, StudentID) VALUES
+(1, '2025-01-15', '09:00:00', 180, 2, 1),
+(2, '2025-01-18', '15:00:00', 240, 2, 2),
+(3, '2025-01-20', '10:00:00', 180, 1, 1),
+(4, '2025-01-21', '11:00:00', 180, 2, 1);
+
+-- Q.3.5: Display tutorials scheduled between 2025-01-16 and 2025-01-20 (inclusive)
+SELECT *
+FROM Tutorial
+WHERE TutorialDate BETWEEN '2025-01-16' AND '2025-01-20';
+
+-- Q.3.6: Display names and surnames of students with the total number of tutorials they have booked
+SELECT 
+    S.StudentName,
+    S.StudentSurname,
+    COUNT(T.TutorialID) AS TotalTutorials
+FROM 
+    Student S
+JOIN 
+    Tutorial T ON S.StudentID = T.StudentID
+GROUP BY 
+    S.StudentID, S.StudentName, S.StudentSurname
+ORDER BY 
+    TotalTutorials DESC;
+
+-- Q.3.7: Create a view to get list of students with tutorials booked with lecturer ID 2
+CREATE VIEW StudentsWithLecturer2 AS
+SELECT 
+    S.StudentName,
+    S.StudentSurname
+FROM 
+    Student S
+JOIN 
+    Tutorial T ON S.StudentID = T.StudentID
+WHERE 
+    T.LecturerID = 2
+ORDER BY 
+    S.StudentSurname ASC;
+    
+    SELECT * FROM StudentsWithLecturer2;
+
+
+
+
+
